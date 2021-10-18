@@ -6,7 +6,7 @@ Easy way to share services hosted on your Husarnet devices over proxy server wit
 
 ## Installation
 
-> This repo is powered by GitHub actions and Ansible, so after providing proper GitHub secrets, everything needed to run the proxy-gui on your own server will be done automatically.
+> This repo is powered by GitHub Actions and Ansible, so after providing proper GitHub secrets, everything needed to run the proxy-gui on your own server will be done automatically.
 
 1. Click **[Use this template](https://github.com/husarnet/proxy-gui/generate)** button and create your own public or private copy of this repo
 2. Prepare a new server with public IP address with clear installation of **Ubuntu 20.04** 
@@ -25,7 +25,7 @@ Easy way to share services hosted on your Husarnet devices over proxy server wit
 
 ### GitHub repository secrets summary
 
-| Repository secret | description |
+| Repository Secret | Description |
 | - | - |
 | `PUBLIC_IP` | Public IP address of your VPS |
 | `SSH_PRIVATE_KEY` | private SSH key (for root at your VPS) |
@@ -33,9 +33,9 @@ Easy way to share services hosted on your Husarnet devices over proxy server wit
 
 ## Usage
 
-### Adding a new revers proxy rule
+### Adding a new reverse proxy rule
 
-Let's assume you have Raspberry Pi with `my-rpi` Husarnet hostname (with the same Husarnet network as this Nginx Proxy Manager instance) running wordpress on port `80`.
+Let's assume you have Raspberry Pi with `my-rpi` Husarnet hostname (with the same Husarnet network as this Nginx Proxy Manager instance) running Wordpress on port `80`.
 
 1. Go to `http://<your-vps-ip>:81` in your web browser and login with default username (`admin@example.com`) and password (`changeme`)
 
@@ -43,7 +43,7 @@ Let's assume you have Raspberry Pi with `my-rpi` Husarnet hostname (with the sam
 
 3. Click **[ Add Proxy Host ]** button and type:
 
-    | field | value |
+    | Field | Value |
     | - | - |
     | Domain Names | `<your-vps-ip>` |
     | Scheme | `http` |
@@ -54,16 +54,16 @@ Let's assume you have Raspberry Pi with `my-rpi` Husarnet hostname (with the sam
 
     Click **[ Save button ]**
 
-5. Visit `http://<your-vps-ip>` to see Wordpress website hosted by your Raspberry Pi
+4. Visit `http://<your-vps-ip>` to see Wordpress website hosted by your Raspberry Pi
 
 
-### Adding more locations under the URL
+### Adding more locations under the same domain / IP
 
 Let's assume you have a local development server running on port `3000` on your laptop (`my-latop` Husarnet hostname) and want to make it available under `http://<your-vps-ip>/demo-server` location:
 
 Select `Proxy Host` and go to `Custom locations` tab:
 
-| field | value |
+| Field | Value |
 | - | - |
 | location | `/demo-server` |
 | Scheme | `http` |
@@ -72,6 +72,6 @@ Select `Proxy Host` and go to `Custom locations` tab:
 
 ## Backup
 
-If you want to save / restore settings of your Nginx Proxy Manager, go to `Actions` tab and manually trigger `Save Backup` or `Restore Backup` workflows. The backup will be stored as `.backup.tgz` in your GitHub repository.
+If you want to save / restore settings of your Nginx Proxy Manager, go to `Actions` tab and manually trigger `Save Backup` or `Restore Backup` GitHub workflows. The backup will be stored as `.backup.tgz` in your GitHub repository.
 
 
