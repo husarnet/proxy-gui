@@ -1,0 +1,33 @@
+name: Deploy to server
+
+on: 
+  push:
+    paths:
+      - '.ansible/deploy.yml'
+      - '.github/workflows/deploy-to-server.yml'
+      - 'docker-compose.vps.yml'
+  workflow_dispatch:
+  
+jobs:
+  launch-playbook:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Preparing Key File
+      env:
+        SECRET_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      run: |
+        echo "$SECRET_KEY" > github-actions-ssh-key
+        chmod 0600 github-actions-ssh-key
+    
+    - name: Launching Ansible Playbook
+      run: >
+        ansible-playbook 
+        --inventory ${{secrets.PUBLIC_IP}}, 
+        --private-key "./github-actions-ssh-key" 
+        --extra-vars "joincode=${{secrets.HUSARNET_JOINCODE}}" 
+        --extra-vars "ansible_user=root" 
+        .ansible/deploy.yml

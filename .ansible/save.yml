@@ -1,0 +1,40 @@
+
+- name: Make a backup of nginx-proxy-manager settings
+  hosts: all
+
+  tasks:    
+    - name: Ensures /root/nginx-proxy-manager/.backup dir exists and clear it content
+      ansible.builtin.file:
+        path: /root/nginx-proxy-manager/.backup
+        recurse: yes
+        state: directory
+
+    - name: Copy data folder to .backup/data folder
+      ansible.builtin.copy:
+        remote_src: yes
+        src: /root/nginx-proxy-manager/data
+        dest: /root/nginx-proxy-manager/.backup
+
+    - name: Copy letsencrypt folder to .backup/letsencrypt folder
+      ansible.builtin.copy:
+        remote_src: yes
+        src: /root/nginx-proxy-manager/letsencrypt
+        dest: /root/nginx-proxy-manager/.backup
+
+    - name: Compress .backup directory (because fetch doesn't work with directories)
+      community.general.archive:
+        path: /root/nginx-proxy-manager/.backup
+        dest: /root/nginx-proxy-manager/.backup.tgz
+        force_archive: yes
+        remove: yes
+
+    - name: Send .backup.tgz into the GitHub runner
+      ansible.builtin.fetch:
+        src: /root/nginx-proxy-manager/.backup.tgz
+        dest: ../
+        flat: yes
+
+    - name: Remove .backup.tgz from a server
+      ansible.builtin.file:
+        path: /root/nginx-proxy-manager/.backup.tgz
+        state: absent

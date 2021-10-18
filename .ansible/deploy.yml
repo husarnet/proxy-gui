@@ -1,0 +1,54 @@
+
+- name: Install Docker & run nginx-proxy-manager and Husarnet
+  hosts: all
+
+  tasks:    
+    - name: Install packages required by Docker
+      ansible.builtin.apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+        state: present
+
+    - name: Add Docker's official GPG key
+      ansible.builtin.apt_key: 
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker source repository into sources list
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker & Docker-Compose
+      ansible.builtin.apt:
+        pkg:
+          - docker-ce
+          - docker-compose
+        update_cache: yes 
+        state: present
+    
+    - name: Ensures /root/nginx-proxy-manager dir exists
+      file:
+        path: /root/nginx-proxy-manager
+        recurse: yes
+        state: directory
+
+    - name: Copy Docker Compose files to the remote server
+      copy:
+        src: ../{{ item }}
+        dest: /root/nginx-proxy-manager/{{ item }}
+      loop:
+        - docker-compose.vps.yml
+
+    - name: Deploy Docker Compose stack
+      docker_compose:
+        project_src: /root/nginx-proxy-manager
+        remove_volumes: no
+        remove_orphans: yes
+        files:
+          - docker-compose.vps.yml
+        state: present
+      environment:
+        HUSARNET_JOINCODE: "{{ joincode }}"

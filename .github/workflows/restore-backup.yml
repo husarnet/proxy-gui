@@ -1,0 +1,27 @@
+name: Restore Backup
+
+on: workflow_dispatch
+  
+jobs:
+  restore-backup:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Preparing Key File
+      env:
+        SECRET_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      run: |
+        echo "$SECRET_KEY" > github-actions-ssh-key
+        chmod 0600 github-actions-ssh-key
+    
+    - name: Copy backup.tgz file from GitHub runner to remote data/ and letsencrypt/ folders
+      run: >
+        ansible-playbook 
+        --inventory ${{secrets.PUBLIC_IP}}, 
+        --private-key "./github-actions-ssh-key" 
+        --extra-vars "joincode=${{secrets.HUSARNET_JOINCODE}}"
+        --extra-vars "ansible_user=root" 
+        .ansible/restore.yml

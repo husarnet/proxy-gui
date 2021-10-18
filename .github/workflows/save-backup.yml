@@ -1,0 +1,37 @@
+name: Save Backup
+
+on: workflow_dispatch
+  
+jobs:
+  save-backup:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Preparing Key File
+      env:
+        SECRET_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      run: |
+        echo "$SECRET_KEY" > github-actions-ssh-key
+        chmod 0600 github-actions-ssh-key
+    
+    - name: Copy backup.tgz file from remote server to the GitHub runner
+      run: >
+        ansible-playbook 
+        --inventory ${{secrets.PUBLIC_IP}}, 
+        --private-key "./github-actions-ssh-key" 
+        --extra-vars "ansible_user=root"
+        -vvv
+        .ansible/save.yml
+
+    - name: Commit & push .backup.tgz to the GitHub repo
+      uses: EndBug/add-and-commit@v7
+      with:
+        message: Nginx Proxy Manager manual backup
+        add: '.backup.tgz --force'
+
+    - name: See workpace content (all)
+      run: |
+        tree -a

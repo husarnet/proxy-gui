@@ -1,0 +1,70 @@
+
+- name: Restore a backup of nginx-proxy-manager settings
+  hosts: all
+
+  tasks:    
+    - name: Unarchive .backup.tgz (in GitHub runner) to .backup folder on remote server
+      ansible.builtin.unarchive:
+        src: ../.backup.tgz
+        dest: /root/nginx-proxy-manager
+
+    - name: Remove all running container
+      docker_compose:
+        project_src: /root/nginx-proxy-manager
+        remove_volumes: no
+        remove_orphans: yes
+        files:
+          - docker-compose.vps.yml
+        state: absent
+      environment:
+        HUSARNET_JOINCODE: "{{ joincode }}"
+
+    - name: Remove /data directory
+      file:
+        path: /root/nginx-proxy-manager/data
+        state: absent
+
+    - name: Remove /letsencrypt directory
+      file:
+        path: /root/nginx-proxy-manager/letsencrypt
+        state: absent
+
+    - name: Check directory content
+      shell: |
+        ls -la /root/nginx-proxy-manager/
+        docker ps -a
+      register: myreg
+
+    - debug: 
+        msg:
+        - "{{ myreg.stdout }}"
+        - "{{ myreg.stderr }}"
+      # stdout_callback: yaml
+
+    - name: Restore /data directory from .backup
+      ansible.builtin.copy:
+        remote_src: yes
+        src: /root/nginx-proxy-manager/.backup/data
+        dest: /root/nginx-proxy-manager/
+
+    - name: Restore /letsencrypt directory from .backup
+      ansible.builtin.copy:
+        remote_src: yes
+        src: /root/nginx-proxy-manager/.backup/letsencrypt
+        dest: /root/nginx-proxy-manager/
+
+    - name: Restart all container
+      docker_compose:
+        project_src: /root/nginx-proxy-manager
+        remove_volumes: no
+        remove_orphans: yes
+        files:
+          - docker-compose.vps.yml
+        state: present
+      environment:
+        HUSARNET_JOINCODE: "{{ joincode }}"
+
+    - name: Remove /.backup directory
+      file:
+        path: /root/nginx-proxy-manager/.backup
+        state: absent
