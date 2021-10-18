@@ -5,7 +5,7 @@ on:
     paths:
       - '.ansible/deploy.yml'
       - '.github/workflows/deploy-to-server.yml'
-      - 'docker-compose.vps.yml'
+      - 'docker-compose.yml'
   workflow_dispatch:
   
 jobs:

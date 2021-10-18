@@ -40,7 +40,7 @@
         src: ../{{ item }}
         dest: /root/nginx-proxy-manager/{{ item }}
       loop:
-        - docker-compose.vps.yml
+        - docker-compose.yml
 
     - name: Deploy Docker Compose stack
       docker_compose:
@@ -48,7 +48,7 @@
         remove_volumes: no
         remove_orphans: yes
         files:
-          - docker-compose.vps.yml
+          - docker-compose.yml
         state: present
       environment:
         HUSARNET_JOINCODE: "{{ joincode }}"

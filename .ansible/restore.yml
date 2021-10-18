@@ -14,7 +14,7 @@
         remove_volumes: no
         remove_orphans: yes
         files:
-          - docker-compose.vps.yml
+          - docker-compose.yml
         state: absent
       environment:
         HUSARNET_JOINCODE: "{{ joincode }}"
@@ -59,7 +59,7 @@
         remove_volumes: no
         remove_orphans: yes
         files:
-          - docker-compose.vps.yml
+          - docker-compose.yml
         state: present
       environment:
         HUSARNET_JOINCODE: "{{ joincode }}"
