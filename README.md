@@ -29,7 +29,7 @@ Easy way to share services hosted on your Husarnet devices over proxy server wit
 | - | - |
 | `PUBLIC_IP` | Public IP address of your VPS |
 | `SSH_PRIVATE_KEY` | private SSH key (for root at your VPS) |
-| `HUSARNET_JOINCODE` | Join Code from app.husarnet.com |
+| `HUSARNET_JOINCODE` | Join Code from https://app.husarnet.com |
 
 ## Usage
 
