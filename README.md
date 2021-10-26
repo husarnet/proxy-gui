@@ -33,42 +33,7 @@ Easy way to share services hosted on your Husarnet devices over proxy server wit
 
 ## Usage
 
-### Adding a new reverse proxy rule
-
-Let's assume you have Raspberry Pi with `my-rpi` Husarnet hostname (with the same Husarnet network as this Nginx Proxy Manager instance) running Wordpress on port `80`.
-
-1. Go to `http://<your-vps-ip>:81` in your web browser and login with default username (`admin@example.com`) and password (`changeme`)
-
-2. Go To **Hosts** -> **Proxy Hosts** tab
-
-3. Click **[ Add Proxy Host ]** button and type:
-
-    | Field | Value |
-    | - | - |
-    | Domain Names | `<your-vps-ip>` |
-    | Scheme | `http` |
-    | Forward Hostname / IP | `my-rpi` (or IPv6 addr in `[]`) |
-    | Forward Port | `80` (port on VPS, not from RPi) |
-
-    Place other tabs (`Custom locations`, `SSL`, `Advanced`) empty
-
-    Click **[ Save button ]**
-
-4. Visit `http://<your-vps-ip>` to see Wordpress website hosted by your Raspberry Pi
-
-
-### Adding more locations under the same domain / IP
-
-Let's assume you have a local development server running on port `3000` on your laptop (`my-latop` Husarnet hostname) and want to make it available under `http://<your-vps-ip>/demo-server` location:
-
-Select `Proxy Host` and go to `Custom locations` tab:
-
-| Field | Value |
-| - | - |
-| location | `/demo-server` |
-| Scheme | `http` |
-| Forward Hostname / IP | `my-latop/` |
-| Forward Port | `3000` |
+Info on how to setup domains, issue SSL certificates and define proxy rules are in [this blog post](https://husarnet.com/blog/reverse-proxy-gui).
 
 ## Backup
 
